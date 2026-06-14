@@ -1,9 +1,6 @@
 ---
 title: PX4 Bridge
-permalink: /venom_px4_bridge
-desc: venom_px4_bridge — PX4 集成项目根目录，以及 bridge 包与 px4_msgs 的职责划分。
-breadcrumb: 硬件驱动
-layout: default
+description: venom_px4_bridge — PX4 集成项目根目录，以及 bridge 包与 px4_msgs 的职责划分。
 ---
 
 ## 模块定位
@@ -36,7 +33,9 @@ driver/venom_px4_bridge/
 
 - `px4_agent_monitor`
 - `px4_status_adapter`
+- `px4_external_pose_bridge`
 - `px4_agent_probe.launch.py`
+- `px4_external_pose_bridge.launch.py`
 
 当前桥接输出包括：
 
@@ -44,6 +43,7 @@ driver/venom_px4_bridge/
 - `/px4_bridge/state`
 - `/px4_bridge/odom`
 - `/px4_bridge/health`
+- `/fmu/in/vehicle_visual_odometry`
 
 ## 推荐使用方式
 
@@ -63,6 +63,44 @@ cd ~/venom_ws
 colcon build --symlink-install --packages-up-to px4_msgs venom_px4_bridge venom_bringup
 ```
 
+## 外部位姿桥接
+
+`px4_external_pose_bridge` 用于把上层定位算法输出的 `nav_msgs/Odometry` 转成 PX4 可接收的 `px4_msgs/VehicleOdometry`，发布到 PX4 DDS 输入侧。
+
+默认数据流：
+
+```text
+/lio/vps/odometry
+  -> px4_external_pose_bridge
+  -> /fmu/in/vehicle_visual_odometry
+  -> PX4 EKF2 external vision / visual odometry fusion
+```
+
+默认入口在主仓库：
+
+```bash
+cd ~/venom_ws
+source install/setup.bash
+ros2 launch venom_bringup px4_vps_bridge.launch.py
+```
+
+常用 launch 参数：
+
+| 参数 | 作用 | 默认值 |
+| --- | --- | --- |
+| `fmu_prefix` | PX4 DDS 话题命名空间前缀。 | `"/fmu"` |
+| `input_odom_topic` | 上游 LIO / VPS 算法输出的 `nav_msgs/Odometry`。 | `"/lio/vps/odometry"` |
+
+如果上游定位输出话题不同，直接覆盖 `input_odom_topic`：
+
+```bash
+cd ~/venom_ws
+source install/setup.bash
+ros2 launch venom_bringup px4_vps_bridge.launch.py input_odom_topic:=/lio/odom
+```
+
+注意：PX4 是否真正融合外部视觉里程计，还取决于 PX4 侧 EKF2 参数、时间戳、坐标系和协方差配置。
+
 ## 为什么要单独拆成一个项目根目录
 
 这样做主要是为了隔离三类变化：
@@ -75,11 +113,12 @@ colcon build --symlink-install --packages-up-to px4_msgs venom_px4_bridge venom_
 
 ## 相关文档
 
-- [驱动层]({{ '/driver_overview' | relative_url }})
-- [系统启动]({{ '/venom_bringup' | relative_url }})
+- [驱动层](index.md)
+- [系统启动](../integration/venom_bringup.md)
+- [启动使用](../../home/launch_usage.md)
 
 ## 进一步阅读
 
-- [venom_px4_bridge README](/Users/liyh/venom_vnv/driver/venom_px4_bridge/README.md)
-- [deployment.md](/Users/liyh/venom_vnv/driver/venom_px4_bridge/docs/deployment.md)
-- [COMPATIBILITY.md](/Users/liyh/venom_vnv/driver/venom_px4_bridge/COMPATIBILITY.md)
+- [venom_px4_bridge README](https://github.com/Venom-Algorithm/Venom_VNV/blob/master/driver/venom_px4_bridge/README.md)
+- [deployment.md](https://github.com/Venom-Algorithm/Venom_VNV/blob/master/driver/venom_px4_bridge/docs/deployment.md)
+- [COMPATIBILITY.md](https://github.com/Venom-Algorithm/Venom_VNV/blob/master/driver/venom_px4_bridge/COMPATIBILITY.md)

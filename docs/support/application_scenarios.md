@@ -1,9 +1,6 @@
 ---
 title: 应用场景
-permalink: /application_scenarios
-desc: 项目当前主要覆盖的应用方向与使用场景。
-breadcrumb: 支持与社区
-layout: default
+description: 项目当前主要覆盖的应用方向与使用场景。
 ---
 
 ## 当前应用方向
@@ -24,7 +21,7 @@ Venom VNV 当前主要服务于多类机器人系统的快速集成、联调与�
 - 感知接入与目标跟踪
 - 自瞄与目标解算
 - 抓取与机械执行
-- 多载体系统集成
+- 多载体系统协同
 
 ## 载体类型
 

@@ -1,9 +1,6 @@
 ---
 title: 话题参考
-permalink: /topics
-desc: 系统级 ROS2 话题、数据流图、自定义消息字段。
-breadcrumb: 快速开始
-layout: default
+description: 系统级 ROS2 话题、数据流图、自定义消息字段。
 ---
 
 # 话题总览
@@ -59,7 +56,22 @@ flowchart LR
 | 发布 | `/tracker/target` | `auto_aim_interfaces/Target` | `armor_tracker` | EKF 跟踪后的目标状态，包括位置、速度、yaw 与跟踪状态。 |
 | 发布 | `/tracker/info` | `auto_aim_interfaces/TrackerInfo` | `armor_tracker` | EKF 调试信息，包括位置残差和 yaw 残差等。 |
 
-### 定位链路（`lio` / `relocalization`）
+### 条码 / 二维码识别（`zbar_ros`）
+
+| 方向 | 话题 | 消息类型 | 发布 / 订阅方 | 说明 |
+|---|---|---|---|---|
+| 订阅 | `/image_raw` | `sensor_msgs/Image` | 相机驱动 | 原始图像输入。 |
+| 发布 | `/perception/barcodes` | `zbar_interfaces/BarcodeDetections` | `zbar_ros` | 当前帧条码 / 二维码识别结果。`header` 直接继承输入图像。 |
+| 发布 | `/perception/debug/barcodes` | `sensor_msgs/Image` | `zbar_ros` | 调试图像输出。`header` 同样沿用输入图像。 |
+
+补充约束：
+
+- `zbar_ros` 不订阅 `/camera_info`
+- `zbar_ros` 不发布任何 TF
+- `/perception/barcodes.header.frame_id` 必须保持与源图像一致，不能被 detector 重写
+- 这个模块的输出是图像平面识别结果，不能仅凭它直接推断 3D 位姿
+
+### 定位链路与全局定位接口
 
 | 方向 | 话题 | 消息类型 | 发布 / 订阅方 | 说明 |
 |---|---|---|---|---|
@@ -70,6 +82,8 @@ flowchart LR
 | 发布 | `/path` | `nav_msgs/Path` | Point-LIO / Fast-LIO | 局部积分路径，`frame_id = odom`。 |
 | 订阅 | `/livox/lidar` | `livox_ros_driver2/CustomMsg` | Point-LIO / Fast-LIO | Livox 雷达点云输入。 |
 | 订阅 | `/livox/imu` | `sensor_msgs/Imu` | Point-LIO / Fast-LIO | LIO 估计器使用的 IMU 输入。 |
+
+全局定位 / 重定位模块的接口当前只保留 `map -> odom` 责任边界，还没有默认启用的话题约定。`small_gicp_relocalization` 已从默认 submodule 中移除，后续如果重新接入，应先在本页补齐输入地图、当前点云、初始位姿和输出诊断话题。
 
 ---
 

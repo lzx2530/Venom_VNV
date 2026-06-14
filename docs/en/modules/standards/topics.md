@@ -1,9 +1,6 @@
 ---
 title: Topic Reference
-permalink: /en/topics
-desc: System-level ROS 2 topics, data flow, and important interface fields.
-breadcrumb: Quick Start
-layout: default
+description: System-level ROS 2 topics, data flow, and important interface fields.
 ---
 
 ## Goal
@@ -18,9 +15,11 @@ This page is the topic-level contract for the system. It helps answer:
 
 - driver outputs
 - localization outputs
-- relocalization outputs
+- reserved global-localization / relocalization interfaces
 - auto-aim pipeline topics
 - integration-level topics
+
+Current default LIO modules publish `/odom`, `/cloud_registered`, `/cloud_registered_body`, `/map_cloud`, and `/path`. The previous GICP relocalization stack is disabled, so no relocalization topic should be assumed to exist in a fresh workspace.
 
 ## Note
 

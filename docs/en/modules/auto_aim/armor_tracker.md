@@ -1,9 +1,7 @@
 ---
 title: Target Tracking
-permalink: /en/armor_tracker
-desc: armor_tracker — EKF-based multi-target tracking with motion prediction and compensation.
-breadcrumb: Auto Aim
-layout: default
+description: armor_tracker — EKF-based multi-target tracking with motion prediction
+  and compensation.
 ---
 
 ## Module Role

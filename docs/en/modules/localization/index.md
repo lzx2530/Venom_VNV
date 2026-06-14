@@ -1,20 +1,31 @@
 ---
 title: Localization
-permalink: /en/localization_overview
-desc: Overview of 3D odometry, 2D odometry, and global relocalization modules.
-breadcrumb: Modules & Interfaces
-layout: default
+description: Overview of LIO, 2D odometry, and future global-localization interfaces.
 ---
+
+## Layer Role
+
+The localization layer is responsible for:
+
+1. continuous local pose estimation such as `odom -> base_link`
+2. keeping a stable `map -> odom` interface contract for future global-localization / relocalization modules
 
 ## Covered Modules
 
-- [rf2o Laser Odometry]({{ '/en/rf2o_laser_odometry' | relative_url }})
-- [Relocalization]({{ '/en/small_gicp_relocalization' | relative_url }})
+- [LIO Overview](../lio/index.md)
+- [Point-LIO](../lio/point_lio.md)
+- [Fast-LIO](../lio/fast_lio.md)
+- [rf2o Laser Odometry](rf2o_laser_odometry.md)
 
-## System Role
+The GICP relocalization submodule is temporarily disabled because of known stability issues and is no longer initialized as a main-repository submodule.
 
-This section complements the LIO section:
+## Structure Inside This Layer
 
-- LIO handles the main 3D odometry chain
-- 2D odometry can serve as a lighter-weight supplement
-- relocalization is responsible for `map -> odom`
+- `localization/lio/`
+- `localization/relocalization/` reserved for future global-localization / relocalization modules
+
+## Reading Order
+
+1. [LIO Overview](../lio/index.md)
+2. [Point-LIO](../lio/point_lio.md)
+3. [rf2o Laser Odometry](rf2o_laser_odometry.md)

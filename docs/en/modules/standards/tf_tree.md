@@ -1,9 +1,6 @@
 ---
 title: TF Tree
-permalink: /en/tf_tree
-desc: System-level frame hierarchy and frame-role conventions.
-breadcrumb: Quick Start
-layout: default
+description: System-level frame hierarchy and frame-role conventions.
 ---
 
 ## Goal
@@ -15,8 +12,10 @@ This page records the expected frame hierarchy used across the robot stack.
 Even when algorithms are swapped, the surrounding TF responsibilities should stay stable:
 
 - `odom -> base_link` from odometry
-- `map -> odom` from relocalization or global localization
+- `map -> odom` reserved for a future relocalization or global-localization module
 - sensor frames and static robot-description frames from the description layer
+
+The default workspace currently does not initialize `small_gicp_relocalization`, so `map -> odom` is a reserved contract instead of an active default publisher.
 
 ## Note
 

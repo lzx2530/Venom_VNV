@@ -1,9 +1,7 @@
 ---
 title: Quick Start
-permalink: /en/quick_start
-desc: The shortest path for a first-time user to clone, build, and verify the workspace.
-breadcrumb: Deployment & Usage
-layout: default
+description: The shortest path for a first-time user to clone, build, and verify the
+  workspace.
 ---
 
 ## Before You Begin
@@ -16,15 +14,15 @@ Make sure the following are already available:
 - `colcon`
 - Livox-SDK2
 
-If your base environment is not ready yet, start from [Environment Setup]({{ '/en/environment' | relative_url }}).
+If your base environment is not ready yet, start from [Environment Setup](../deployment/environment.md).
 
-You can verify Livox-SDK2 with:
+You can check whether the key Livox-SDK2 runtime library exists with:
 
 ```bash
-ldconfig -p | grep LivoxSdkCore
+ls /usr/local/lib/liblivox_lidar_sdk_shared.so
 ```
 
-If it is missing, complete [LiDAR Setup]({{ '/en/lidar_setup' | relative_url }}) first.
+If this file is missing, complete [LiDAR Setup](../deployment/lidar_setup.md) first.
 
 If `rosdep install` fails, try:
 
@@ -42,6 +40,23 @@ cd ~
 mkdir -p ~/venom_ws/src
 git clone --recurse-submodules https://github.com/Venom-Algorithm/Venom_VNV ~/venom_ws/src/venom_vnv
 ```
+
+If you only need one workflow, clone the main repository first and then initialize a profile-specific submodule set:
+
+```bash
+cd ~
+mkdir -p ~/venom_ws/src
+git clone https://github.com/Venom-Algorithm/Venom_VNV ~/venom_ws/src/venom_vnv
+cd ~/venom_ws/src/venom_vnv
+make submodules-ugv       # real UGV: chassis, LiDAR, localization, navigation, general perception
+make submodules-sim       # pure simulation: simulation workspace, Ego Planner, TEB controller
+make submodules-ugv-sim   # UGV simulation: simulation, localization, TEB controller, general perception
+make submodules-auto-aim  # auto-aim / vision development: auto aim, YOLO, ZBar, camera, serial
+make submodules-uav       # UAV: PX4 bridge, Ego Planner, YOLO, ZBar
+make submodules-all       # initialize all submodules
+```
+
+For first-time full deployment, `--recurse-submodules` is still the simplest path. For single-area development, the profile targets save time and disk space.
 
 If you want to remove an old workspace and start clean, move back to your home directory first:
 
@@ -82,18 +97,27 @@ git submodule sync --recursive
 git submodule update --init --recursive
 ```
 
-If you also need the recommended Git remote strategy for development machines, see [Development Notes]({{ '/en/development' | relative_url }}).
+If the workspace was initialized with a profile, rerun the matching target after syncing:
+
+```bash
+cd ~/venom_ws/src/venom_vnv
+git pull
+git submodule sync --recursive
+make submodules-uav
+```
+
+If you also need the recommended Git remote strategy for development machines, see [Development Notes](../support/development.md).
 
 ## Suggested Next Steps
 
-1. [Environment Setup]({{ '/en/environment' | relative_url }})
-2. [LiDAR Setup]({{ '/en/lidar_setup' | relative_url }})
-3. [Chassis CAN Setup]({{ '/en/chassis_can_setup' | relative_url }})
-4. [Launch & Use]({{ '/en/launch_usage' | relative_url }})
+1. [Environment Setup](../deployment/environment.md)
+2. [LiDAR Setup](../deployment/lidar_setup.md)
+3. [Chassis CAN Setup](../deployment/chassis_can_setup.md)
+4. [Launch & Use](launch_usage.md)
 
 ## First Validation
 
-- LiDAR chain: [Livox LiDAR Driver]({{ '/en/livox_ros_driver2' | relative_url }})
-- Camera chain: [Hikrobot Camera Driver]({{ '/en/ros2_hik_camera' | relative_url }})
-- Serial chain: [Serial Driver]({{ '/en/venom_serial_driver' | relative_url }})
-- System-level interfaces: [Topics & TF Overview]({{ '/en/system_overview' | relative_url }})
+- LiDAR chain: [Livox LiDAR Driver](../modules/drivers/livox_ros_driver2.md)
+- Camera chain: [Hikrobot Camera Driver](../modules/drivers/ros2_hik_camera.md)
+- Serial chain: [Serial Driver](../modules/drivers/venom_serial_driver.md)
+- System-level interfaces: [Topics & TF Overview](../deployment/system_overview.md)

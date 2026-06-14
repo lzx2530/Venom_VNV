@@ -1,9 +1,6 @@
 ---
 title: Topics & TF Overview
-permalink: /en/system_overview
-desc: System-level topic map, TF relationships, and key data flow conventions.
-breadcrumb: Deployment & Usage
-layout: default
+description: System-level topic map, TF relationships, and key data flow conventions.
 ---
 
 ## Why This Page Exists
@@ -13,7 +10,7 @@ When multiple packages are brought together, the first thing that needs to stay 
 - Which topics are expected
 - Which frames are fixed
 - Which modules publish `odom`
-- Which module is responsible for `map -> odom`
+- Which future module is allowed to own `map -> odom`
 
 ## Core System Layers
 
@@ -21,8 +18,10 @@ When multiple packages are brought together, the first thing that needs to stay 
 | --- | --- |
 | Driver layer | LiDAR, IMU, image, serial, chassis state |
 | Localization layer | `/odom`, registered clouds, path, TF |
-| Relocalization layer | `map -> odom` |
+| Global-localization interface | reserved `map -> odom` contract |
 | Task / integration layer | High-level robot behavior and launch orchestration |
+
+The default workspace no longer initializes `small_gicp_relocalization`. Therefore, `map -> odom` is a reserved interface contract, not an active default relocalization node.
 
 ## Typical Data Flow
 
@@ -34,5 +33,5 @@ Chassis / arm / controller links -> dedicated drivers -> robot actions
 
 ## Further Reading
 
-- [Topic Reference]({{ '/en/topics' | relative_url }})
-- [TF Tree]({{ '/en/tf_tree' | relative_url }})
+- [Topic Reference](../modules/standards/topics.md)
+- [TF Tree](../modules/standards/tf_tree.md)

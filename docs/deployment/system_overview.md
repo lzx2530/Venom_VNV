@@ -1,9 +1,6 @@
 ---
 title: 话题与 TF 总览
-permalink: /system_overview
-desc: 系统级 topic map、TF 关系与关键数据流。
-breadcrumb: 部署与使用
-layout: default
+description: 系统级 topic map、TF 关系与关键数据流。
 ---
 
 ## 适合什么时候看
@@ -14,12 +11,14 @@ layout: default
 
 ## 文档入口
 
-- [话题参考]({{ '/topics' | relative_url }})
-- [TF 树]({{ '/tf_tree' | relative_url }})
+- [话题参考](../modules/standards/topics.md)
+- [TF 树](../modules/standards/tf_tree.md)
 
 ## 关键链路
 
 - 感知链：相机 -> 检测 -> 跟踪 -> 弹道 -> 串口
 - 定位链：Livox -> Point-LIO -> odom
-- 重定位链：点云对齐 -> `map -> odom`
+- 全局定位接口：后续全局定位 / 重定位模块 -> `map -> odom`
 - 执行链：导航 / 自瞄控制 -> 串口 -> C 板
+
+当前默认工作区不再拉取 `small_gicp_relocalization`，因此 `map -> odom` 只是保留接口约定，不代表当前有默认重定位节点在运行。

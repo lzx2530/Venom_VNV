@@ -1,9 +1,7 @@
 ---
 title: Application Scenarios
-permalink: /en/application_scenarios
-desc: Typical application directions and system contexts currently covered by the project.
-breadcrumb: Support & Community
-layout: default
+description: Typical application directions and system contexts currently covered
+  by the project.
 ---
 
 ## Typical Usage Contexts
@@ -24,7 +22,7 @@ The current engineering focus includes:
 - perception and target tracking
 - auto aim and targeting
 - manipulation and end-effectors
-- multi-platform system integration
+- multi-platform system coordination
 
 ## Vehicle Types
 

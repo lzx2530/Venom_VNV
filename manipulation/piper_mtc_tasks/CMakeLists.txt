@@ -10,14 +10,15 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 endif()
 
 find_package(ament_cmake REQUIRED)
+find_package(control_msgs REQUIRED)
 find_package(gazebo_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(linkattacher_msgs REQUIRED)
 find_package(moveit_ros_planning REQUIRED)
 find_package(moveit_ros_planning_interface REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
@@ -25,24 +26,30 @@ find_package(venom_manipulation_interfaces REQUIRED)
 
 find_package(moveit_task_constructor_core QUIET)
 find_package(moveit_task_constructor_msgs QUIET)
+find_package(linkattacher_msgs QUIET)
 
 set(common_dependencies
+  control_msgs
   gazebo_msgs
   geometry_msgs
-  linkattacher_msgs
   moveit_ros_planning
   moveit_ros_planning_interface
   rclcpp
   rclcpp_action
   sensor_msgs
+  std_srvs
   tf2
   tf2_geometry_msgs
   trajectory_msgs
   venom_manipulation_interfaces
 )
 
+if(linkattacher_msgs_FOUND)
+  list(APPEND common_dependencies linkattacher_msgs)
+endif()
+
 if(moveit_task_constructor_core_FOUND AND moveit_task_constructor_msgs_FOUND)
-  set(runtime_targets pick_place_server ik_frame_sweep)
+  set(runtime_targets pick_place_server ik_frame_sweep task_pose_reachability_probe)
 
   add_library(${PROJECT_NAME}_core
     src/gripper_stage_builder.cpp
@@ -75,6 +82,9 @@ if(moveit_task_constructor_core_FOUND AND moveit_task_constructor_msgs_FOUND)
     moveit_task_constructor_core
     moveit_task_constructor_msgs
   )
+  if(linkattacher_msgs_FOUND)
+    target_compile_definitions(pick_place_server PRIVATE HAVE_LINKATTACHER_MSGS=1)
+  endif()
 
   add_executable(ik_frame_sweep
     src/ik_frame_sweep.cpp
@@ -87,6 +97,32 @@ if(moveit_task_constructor_core_FOUND AND moveit_task_constructor_msgs_FOUND)
     moveit_ros_planning
     rclcpp
   )
+
+  add_executable(task_pose_reachability_probe
+    src/task_pose_reachability_probe.cpp
+  )
+  target_include_directories(task_pose_reachability_probe PUBLIC
+    include
+  )
+  ament_target_dependencies(task_pose_reachability_probe
+    geometry_msgs
+    moveit_ros_planning
+    rclcpp
+  )
+
+  add_executable(payload_mount_sweep
+    src/payload_mount_sweep.cpp
+  )
+  target_include_directories(payload_mount_sweep PUBLIC
+    include
+  )
+  ament_target_dependencies(payload_mount_sweep
+    geometry_msgs
+    moveit_ros_planning
+    rclcpp
+  )
+
+  list(APPEND runtime_targets payload_mount_sweep)
 
 else()
   set(runtime_targets pick_place_server)
@@ -115,7 +151,10 @@ install(
 )
 
 install(
-  PROGRAMS scripts/pivot_tcp_calibration.py
+  PROGRAMS
+    scripts/pivot_tcp_calibration.py
+    scripts/repeat_visual_pick.py
+    scripts/visual_target_probe.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

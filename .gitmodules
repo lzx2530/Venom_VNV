@@ -4,9 +4,6 @@
 [submodule "localization/lio/Point-LIO"]
 	path = localization/lio/Point-LIO
 	url = https://github.com/Venom-Algorithm/Point-LIO.git
-[submodule "localization/relocalization/small_gicp_relocalization"]
-	path = localization/relocalization/small_gicp_relocalization
-	url = https://github.com/Venom-Algorithm/small_gicp_relocalization.git
 [submodule "driver/ugv_sdk"]
 	path = driver/ugv_sdk
 	url = https://github.com/agilexrobotics/ugv_sdk
@@ -42,7 +39,21 @@
 	url = https://github.com/Venom-Algorithm/venom_px4_bridge.git
 [submodule "simulation/venom_nav_simulation"]
 	path = simulation/venom_nav_simulation
-	url = git@github.com:Venom-Algorithm/venom_nav_simulation.git
+	url = https://github.com/Venom-Algorithm/venom_nav_simulation.git
+[submodule "perception/yolo_detector"]
+	path = perception/yolo_detector
+	url = https://github.com/lzx2530/yolo_detector.git
+	branch = venom-manipulation-sync
+[submodule "planning/navigation/ego-planner-swarm"]
+	path = planning/navigation/ego-planner-swarm
+	url = https://github.com/ZJU-FAST-Lab/ego-planner-swarm.git
+	branch = ros2_version
+[submodule "perception/zbar_ros"]
+	path = perception/zbar_ros
+	url = https://github.com/Venom-Algorithm/zbar_ros.git
+[submodule "planning/navigation/venom_teb_controller"]
+	path = planning/navigation/venom_teb_controller
+	url = https://github.com/Venom-Algorithm/venom_teb_controller.git
 [submodule "third_party/IFRA_LinkAttacher"]
 	path = third_party/IFRA_LinkAttacher
 	url = https://github.com/IFRA-Cranfield/IFRA_LinkAttacher.git

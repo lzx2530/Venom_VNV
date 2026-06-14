@@ -1,9 +1,6 @@
 ---
 title: 更新与迁移
-permalink: /migration_notes
-desc: 仓库地址迁移、submodule 策略与版本兼容说明。
-breadcrumb: 支持与社区
-layout: default
+description: 仓库地址迁移、submodule 策略与版本兼容说明。
 ---
 
 ## 当前策略
@@ -11,9 +8,27 @@ layout: default
 - 主仓库与子模块维护在 organization 下
 - `.gitmodules` 使用 HTTPS，方便非作者拉取
 - 维护者本地 remote 可继续使用 SSH 进行推送
+- 按需拉取子模块时优先使用 Makefile profile，例如 `make submodules-uav`
+- CI / Docker 构建会临时写入 `COLCON_IGNORE` 跳过硬件或平台相关包，该文件不应提交
+
+## 近期结构变化
+
+| 变化 | 说明 |
+| --- | --- |
+| `planning/navigation/ego-planner-swarm` | 新增 Ego Planner Swarm ROS 2 子模块，跟踪 `ros2_version` 分支 |
+| `planning/navigation/venom_teb_controller` | 新增 Nav2 controller 插件形式的 TEB 局部规划器 |
+| `perception/zbar_ros` | 新增二维码 / 条码识别模块，输出结构化 2D 识别结果 |
+| `venom_bringup/venom_bringup/mission_controller` | 当前任务控制框架已落地在 `venom_bringup` 内，后续新任务包仍归入 `mission/` |
+| `venom_bringup/venom_bringup/multi_waypoint_commander.py` | 新增基于 Nav2 Simple Commander 的多航点任务入口 |
+| `venom_bringup/launch/examples/px4_vps_bridge.launch.py` | 新增 PX4 外部位姿桥接入口 |
+| `docker/Dockerfile.sim`、`docker-compose.yml` | 新增 Docker sim 环境 |
+| `Makefile` profile | 新增 `submodules-ugv`、`submodules-sim`、`submodules-uav` 等按需拉取命令 |
 
 ## 迁移时关注点
 
 - 仓库地址切换后需要同步更新 `.gitmodules`
 - 文档中的旧地址需要一起清理
 - GitHub Pages 会递归拉取 submodule，因此 submodule 可访问性很重要
+- 如果只初始化了部分子模块，切换任务方向后需要重新执行对应 `make submodules-*`
+- `venom_bringup` 中与 Point-LIO PCD 相关的默认路径统一使用 `localization/lio/Point-LIO`
+- `robot_bringup.launch.py` 当前是顶层整机入口模板，日常联调仍优先使用具体 launch 文件
